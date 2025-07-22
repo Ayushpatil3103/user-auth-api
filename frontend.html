@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OTP Login System</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #667eea, #764ba2);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    .box {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      width: 300px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .box h2 {
+      color: #ffffff;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      margin: 8px 0;
+      font-size: 14px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      background-color: #fff;
+      color: #764ba2;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #eee;
+    }
+
+    p {
+      margin-top: 10px;
+      font-size: 14px;
+      text-align: center;
+      color: #d1d1ff;
+    }
+  </style>
+</head>
+<body>
+  <br>
+  <h1>🔐 OTP Login System</h1>
+
+  <div class="box">
+    <h2>Register</h2>
+    <input type="email" id="regEmail" placeholder="Enter your email" />
+    <button onclick="register()">Register</button>
+    <p id="regMsg"></p>
+  </div>
+
+  <div class="box">
+    <h2>Request OTP</h2>
+    <input type="email" id="otpEmail" placeholder="Enter your email" />
+    <button onclick="requestOtp()">Send OTP</button>
+    <p id="otpMsg"></p>
+  </div>
+
+  <div class="box">
+    <h2>Verify OTP</h2>
+    <input type="email" id="verifyEmail" placeholder="Enter your email" />
+    <input type="text" id="otpCode" placeholder="Enter OTP" />
+    <button onclick="verifyOtp()">Verify</button>
+    <p id="tokenMsg"></p>
+  </div>
+
+  <script>
+    async function register() {
+      const email = document.getElementById("regEmail").value;
+      const res = await fetch("http://127.0.0.1:8000/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      document.getElementById("regMsg").innerText = data.message || data.email;
+    }
+
+    async function requestOtp() {
+      const email = document.getElementById("otpEmail").value;
+      const res = await fetch("http://127.0.0.1:8000/api/request-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      document.getElementById("otpMsg").innerText = data.message || data.email;
+    }
+
+    async function verifyOtp() {
+      const email = document.getElementById("verifyEmail").value;
+      const otp = document.getElementById("otpCode").value;
+      const res = await fetch("http://127.0.0.1:8000/api/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, otp }),
+      });
+      const data = await res.json();
+      document.getElementById("tokenMsg").innerText = data.token
+        ? "Access Token: " + data.token.access
+        : (data.message || "Invalid OTP");
+    }
+  </script>
+</body>
+</html>
