@@ -54,7 +54,7 @@ user-auth-api/
 ### 1. Clone the Repo
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/Ayushpatil3103/user-auth-api.git
 cd user-auth-api
 ````
 
